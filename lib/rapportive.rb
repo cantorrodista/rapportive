@@ -24,7 +24,7 @@ module Rapportive
       if result["success"] == "nothing_useful"
         # No se ha encontrado nada
         return {error: "Not Found"}
-      elsif result["error_code"]
+      elsif result["error_code"] || result["error"]
         result
       else
         # data["success"] == "image_and_occupation_and_useful_membership"
@@ -35,14 +35,14 @@ module Rapportive
 
   # 
   class Person
-    attr_accessor :email, :twitter_username, :name, :location, :headline, :image_url_raw, :phones, :occupations, :memberships
+    attr_accessor :email, :twitter_username, :name, :location, :headline, :images, :phones, :occupations, :memberships
     def initialize(data={})
       @email = data["email"]
       @twitter_username = data["twitter_username"]
       @name = data["name"]
       @location = data["location"]
       @headline = data["headline"]
-      @image_url_raw = data["image_url_raw"]
+      @images = !data["images"].empty? ? data["images"].map{|a| a["url"]} : [data["image_url_raw"]]
       @phones = data["phones"]
       @occupations = data["occupations"].inject([]){|a, occ| a << Occupation.new(occ)}
       @memberships = data["memberships"].inject([]){|a, mem| a << Membership.new(mem)}
