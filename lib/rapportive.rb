@@ -3,7 +3,6 @@ require "httpi"
 require "json"
 STATUS_URL = 'https://rapportive.com/login_status' #?user_email={0}
 URL = 'https://profiles.rapportive.com/contacts/email' #/{0}
-EMAIL = "fake_#{rand(10000)}@wadus.com" #Fake email to get token session
 module Rapportive
   class Search
     attr_accessor :session_token
@@ -11,7 +10,7 @@ module Rapportive
       url = URL
       request = HTTPI::Request.new
       request.url = STATUS_URL
-      request.query = {:user_email => EMAIL}
+      request.query = {:user_email => "fake_#{rand(10000)}@wadus.com"}#Fake email to get token session
       @session_token = JSON.parse(HTTPI.get(request).body)["session_token"]
     end
 
