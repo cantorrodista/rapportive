@@ -3,7 +3,7 @@ require "httpi"
 require "json"
 STATUS_URL = 'https://rapportive.com/login_status' #?user_email={0}
 URL = 'https://profiles.rapportive.com/contacts/email' #/{0}
-EMAIL = 'fake@wadus.com' #Fake email to get token session
+EMAIL = "fake_#{rand(10000)}@wadus.com" #Fake email to get token session
 module Rapportive
   class Search
     attr_accessor :session_token
@@ -24,6 +24,8 @@ module Rapportive
       if result["success"] == "nothing_useful"
         # No se ha encontrado nada
         return {error: "Not Found"}
+      elsif result["error_code"]
+        result
       else
         # data["success"] == "image_and_occupation_and_useful_membership"
         Person.new(result["contact"])
