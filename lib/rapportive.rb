@@ -19,15 +19,19 @@ module Rapportive
       request = HTTPI::Request.new
       request.url = "#{URL}/#{email}"
       request.headers = {'X-Session-Token' => @session_token}
-      result = JSON.parse(HTTPI.get(request).body)
-      if result["success"] == "nothing_useful"
-        # No se ha encontrado nada
-        return {error: "Not Found"}
-      elsif result["error_code"] || result["error"]
-        result
-      else
-        # data["success"] == "image_and_occupation_and_useful_membership"
-        Person.new(result["contact"])
+      begin
+        result = JSON.parse(HTTPI.get(request).body)
+        if result["success"] == "nothing_useful"
+          # No se ha encontrado nada
+          return {error: "Not Found"}
+        elsif result["error_code"] || result["error"]
+          result
+        else
+          # data["success"] == "image_and_occupation_and_useful_membership"
+          Person.new(result["contact"])
+        end
+      rescue Exception => e
+        e
       end
     end
   end
